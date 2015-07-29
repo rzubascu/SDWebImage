@@ -195,7 +195,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     return [paths[0] stringByAppendingPathComponent:fullNamespace];
 }
 
-- (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk {
+- (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk withCompletion:(SDWebImageNoParamsBlock)completion {
     if (!image || !key) {
         return;
     }
@@ -256,8 +256,15 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                 if (self.shouldDisableiCloud) {
                     [fileURL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
                 }
+                if (completion) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion();
+                    });
+                }
             }
         });
+    } else if (completion) {
+        completion();
     }
 }
 
@@ -268,6 +275,11 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 - (void)storeImage:(UIImage *)image forKey:(NSString *)key toDisk:(BOOL)toDisk {
     [self storeImage:image recalculateFromImage:YES imageData:nil forKey:key toDisk:toDisk];
 }
+
+- (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk {
+    [self storeImage:image recalculateFromImage:recalculate imageData:imageData forKey:key toDisk:toDisk withCompletion:NULL];
+}
+
 
 - (BOOL)diskImageExistsWithKey:(NSString *)key {
     BOOL exists = NO;
