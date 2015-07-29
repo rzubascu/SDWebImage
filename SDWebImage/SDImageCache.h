@@ -146,7 +146,7 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
  + * @param toDisk      Store the image to disk cache if YES
  + * @param completion  An block that should be executed after the image has been stored (optional)
  + */
-+- (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk withCompletion:(SDWebImageNoParamsBlock)completion;
+- (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk withCompletion:(SDWebImageNoParamsBlock)completion;
 
 /**
  * Query the disk cache asynchronously.
